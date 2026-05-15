@@ -48,12 +48,15 @@ def home():
 # -------------------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    error = None
+
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
 
         if not username or not password:
-            return "Missing fields"
+            error = "Please fill in all fields."
+            return render_template("register.html", error=error)
 
         hashed_pw = generate_password_hash(password)
 
@@ -67,19 +70,22 @@ def register():
             )
             conn.commit()
         except:
-            return "User already exists"
+            error = "Username already exists."
+            return render_template("register.html", error=error)
         finally:
             conn.close()
 
         return redirect("/login")
 
-    return render_template("register.html")
+    return render_template("register.html", error=error)
 
 # -------------------------
 # LOGIN
 # -------------------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    error = None
+
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -95,10 +101,10 @@ def login():
             session["user_id"] = user[0]
             session["username"] = username
             return redirect("/dashboard")
+        else:
+            error = "Incorrect username or password. Please try again."
 
-        return "Invalid login"
-
-    return render_template("login.html")
+    return render_template("login.html", error=error)
 
 # -------------------------
 # LOGOUT
@@ -154,7 +160,7 @@ def delete_task(task_id):
     return redirect("/dashboard")
 
 # -------------------------
-# DASHBOARD (REAL API + FIXED DATA)
+# DASHBOARD (API + TASK DATA)
 # -------------------------
 @app.route("/dashboard")
 def dashboard():
@@ -168,9 +174,7 @@ def dashboard():
     tasks = c.fetchall()
     conn.close()
 
-    # -------------------------
-    # WEEK DATA FOR CHART
-    # -------------------------
+    # TASK DATA FOR CHART
     task_data = {
         "Sunday": 0,
         "Monday": 0,
@@ -185,24 +189,19 @@ def dashboard():
         if t[2] in task_data:
             task_data[t[2]] += 1
 
-    # -------------------------
     # 🌍 PUBLIC API (QUOTABLE)
-    # -------------------------
     quote = "Stay consistent — success is built daily."
 
     try:
-        response = requests.get("https://api.quotable.io/random", timeout=5)
+        res = requests.get("https://api.quotable.io/random", timeout=5)
 
-        if response.status_code == 200:
-            data = response.json()
+        if res.status_code == 200:
+            data = res.json()
             quote = f"{data['content']} — {data['author']}"
 
-    except Exception as e:
-        print("Quote API error:", e)
+    except:
+        pass
 
-    # -------------------------
-    # TIP SYSTEM
-    # -------------------------
     tip = "Break big tasks into small steps and stay consistent."
 
     return render_template(
@@ -215,7 +214,7 @@ def dashboard():
     )
 
 # -------------------------
-# RUN APP (RENDER READY)
+# RUN APP
 # -------------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
