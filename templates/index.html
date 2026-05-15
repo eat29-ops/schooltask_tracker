@@ -5,19 +5,23 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body class="home">
+<body>
 
-<div class="home-card">
+<div class="container">
 
-    <div class="welcome-title">Welcome 👋</div>
+    <div class="home-card">
 
-    <div class="welcome-text">
-        Stay organized, track your tasks, and improve your productivity every week.
+        <div class="welcome-title">Welcome 👋</div>
+
+        <div class="welcome-text">
+            Stay organized, track your tasks, and improve productivity every week.
+        </div>
+
+        <a href="/login"><button>Login</button></a>
+        <br><br>
+        <a href="/register"><button>Create Account</button></a>
+
     </div>
-
-    <a href="/login"><button>Login</button></a>
-    <br><br>
-    <a href="/register"><button>Create Account</button></a>
 
 </div>
 
