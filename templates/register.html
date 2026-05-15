@@ -9,17 +9,26 @@
 
 <div class="container">
 
-    <h1>Register</h1>
+    <div class="card">
 
-    <form method="POST" action="/register">
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
+        <h1 class="center">Register</h1>
 
-        <button type="submit">Create Account</button>
-    </form>
+        <form method="POST" action="/register">
 
-    <a href="/login">Back to Login</a>
-    <a href="/">Back to Home</a>
+            <input type="text" name="username" placeholder="Username" required>
+
+            <input type="password" name="password" placeholder="Password" required>
+
+            <button type="submit">Create Account</button>
+
+        </form>
+
+        <div class="center">
+            <a href="/login">Back to Login</a><br>
+            <a href="/">Back to Home</a>
+        </div>
+
+    </div>
 
 </div>
 
