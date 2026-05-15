@@ -2,29 +2,26 @@
 <html>
 <head>
     <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body style="text-align:center; margin-top:80px; font-family:Arial;">
+<body>
+
+<div class="container">
 
     <h1>Login</h1>
 
     <form method="POST" action="/login">
         <input type="text" name="username" placeholder="Username" required>
-        <br><br>
-
         <input type="password" name="password" placeholder="Password" required>
-        <br><br>
 
         <button type="submit">Login</button>
     </form>
 
-    <br>
-
-    <a href="/register">Go to Register</a>
-    <br><br>
-
-    <!-- HOME BUTTON (FIXED) -->
+    <a href="/register">Create Account</a>
     <a href="/">Back to Home</a>
+
+</div>
 
 </body>
 </html>
