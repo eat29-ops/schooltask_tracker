@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
 # -------------------------
-# INIT DATABASE
+# DATABASE
 # -------------------------
 def init_db():
     conn = sqlite3.connect("database.db")
@@ -36,11 +36,11 @@ def init_db():
 init_db()
 
 # -------------------------
-# HOME
+# HOME PAGE (FIXED)
 # -------------------------
 @app.route("/")
 def home():
-    return redirect("/login")
+    return render_template("index.html")
 
 # -------------------------
 # REGISTER
@@ -105,7 +105,7 @@ def login():
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect("/login")
+    return redirect("/")
 
 # -------------------------
 # ADD TASK
@@ -153,7 +153,7 @@ def delete_task(task_id):
     return redirect("/dashboard")
 
 # -------------------------
-# DASHBOARD
+# DASHBOARD (FIXED CHART DATA)
 # -------------------------
 @app.route("/dashboard")
 def dashboard():
@@ -195,4 +195,5 @@ def dashboard():
 # -------------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
     app.run(host="0.0.0.0", port=port)
