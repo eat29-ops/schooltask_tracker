@@ -1,70 +1,45 @@
-body {
+/* HOMEPAGE BACKGROUND */
+.home-body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #eef2f7;
+    background: linear-gradient(120deg, #4a90e2, #6dd5fa, #ffffff);
+    overflow: hidden;
 }
 
-/* CENTERED APP CONTAINER */
-.container {
-    width: 100%;
-    max-width: 900px;
-    margin: 50px auto;
-    padding: 20px;
+/* WAVE CONTAINER */
+.wave-container {
+    position: relative;
+    height: 100vh;
 }
 
-/* CARD STYLE (USED EVERYWHERE) */
-.card {
-    background: white;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    margin-bottom: 20px;
+/* WAVES */
+.wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 200px;
+    background-repeat: repeat-x;
+    background-size: 50% 100%;
+    opacity: 0.4;
 }
 
-/* HEADINGS */
-h1, h2 {
-    margin: 0 0 15px 0;
-    color: #222;
+/* FIRST WAVE */
+.wave1 {
+    background: rgba(255,255,255,0.4);
+    border-radius: 100%;
+    animation: moveWave 8s linear infinite;
 }
 
-/* INPUTS */
-input, select {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+/* SECOND WAVE (slower) */
+.wave2 {
+    background: rgba(255,255,255,0.2);
+    border-radius: 100%;
+    animation: moveWave 12s linear infinite;
+    bottom: -20px;
 }
 
-/* BUTTONS */
-button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 8px;
-    background: #4a90e2;
-    color: white;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #357bd8;
-}
-
-/* LINKS */
-a {
-    color: #4a90e2;
-    text-decoration: none;
-    display: inline-block;
-    margin-top: 10px;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* SMALL TEXT CENTER */
-.center {
-    text-align: center;
+/* ANIMATION */
+@keyframes moveWave {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
