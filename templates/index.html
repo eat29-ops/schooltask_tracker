@@ -5,19 +5,28 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
+<body class="home-body">
 
-<div class="container">
+<div class="wave-container">
 
-    <div class="card center">
+    <div class="container">
 
-        <h1>Task Tracker</h1>
-        <p>Organize your week and track your productivity</p>
+        <div class="card center">
 
-        <a href="/login">Login</a><br>
-        <a href="/register">Register</a>
+            <h1>Task Tracker</h1>
+            <p>Organize your week, track your tasks, and stay productive.</p>
+
+            <a href="/login">Login</a>
+            <br>
+            <a href="/register">Register</a>
+
+        </div>
 
     </div>
+
+    <!-- WAVES -->
+    <div class="wave wave1"></div>
+    <div class="wave wave2"></div>
 
 </div>
 
