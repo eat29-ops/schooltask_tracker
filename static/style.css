@@ -1,47 +1,46 @@
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: "Arial", sans-serif;
     background: #eef2f7;
 }
 
-/* GENERAL LAYOUT */
+/* CENTER CONTAINER */
 .container {
-    width: 100%;
-    max-width: 900px;
-    margin: 50px auto;
-    padding: 20px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* CARD SYSTEM (USED EVERYWHERE) */
+/* CARD STYLE (USED EVERYWHERE) */
 .card {
+    width: 360px;
     background: white;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    margin-bottom: 20px;
-}
-
-.center {
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
     text-align: center;
 }
 
 /* INPUTS */
 input, select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin: 8px 0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
 }
 
 /* BUTTONS */
 button {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     background: #4a90e2;
     color: white;
+    font-size: 15px;
     cursor: pointer;
 }
 
@@ -51,6 +50,8 @@ button:hover {
 
 /* LINKS */
 a {
+    display: inline-block;
+    margin-top: 10px;
     color: #4a90e2;
     text-decoration: none;
 }
@@ -60,33 +61,38 @@ a:hover {
 }
 
 /* -------------------------
-   🌊 HOMEPAGE WAVE BACKGROUND
+   🌈 HOMEPAGE (REAL GRADIENT + CLEAN LOOK)
 -------------------------- */
 
 body.home {
     height: 100vh;
-    overflow: hidden;
-    background: linear-gradient(-45deg, #4a90e2, #6dd5fa, #ffffff, #4a90e2);
-    background-size: 400% 400%;
-    animation: gradientMove 10s ease infinite;
-}
-
-/* animated gradient */
-@keyframes gradientMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* center overlay */
-.overlay {
-    height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #4a90e2, #6dd5fa, #ffffff);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* make homepage card nicer */
-.overlay .card {
-    width: 350px;
+/* BIG WELCOME TEXT STYLE */
+.welcome-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.welcome-text {
+    font-size: 16px;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 20px;
+}
+
+/* HOME CARD LOOK */
+.home-card {
+    width: 380px;
+    background: rgba(255,255,255,0.95);
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    text-align: center;
 }
