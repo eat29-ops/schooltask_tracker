@@ -154,7 +154,7 @@ def delete_task(task_id):
     return redirect("/dashboard")
 
 # -------------------------
-# DASHBOARD (API USED HERE)
+# DASHBOARD (REAL API + FIXED DATA)
 # -------------------------
 @app.route("/dashboard")
 def dashboard():
@@ -169,7 +169,7 @@ def dashboard():
     conn.close()
 
     # -------------------------
-    # TASK COUNT PER DAY
+    # WEEK DATA FOR CHART
     # -------------------------
     task_data = {
         "Sunday": 0,
@@ -186,17 +186,24 @@ def dashboard():
             task_data[t[2]] += 1
 
     # -------------------------
-    # 🌍 REAL PUBLIC API (ZENQUOTES)
+    # 🌍 PUBLIC API (QUOTABLE)
     # -------------------------
+    quote = "Stay consistent — success is built daily."
+
     try:
-        response = requests.get("https://zenquotes.io/api/random", timeout=3)
-        data = response.json()[0]
+        response = requests.get("https://api.quotable.io/random", timeout=5)
 
-        quote = f"{data['q']} — {data['a']}"
-    except:
-        quote = "Stay consistent. Success comes from daily effort."
+        if response.status_code == 200:
+            data = response.json()
+            quote = f"{data['content']} — {data['author']}"
 
-    tip = "Break big tasks into small steps."
+    except Exception as e:
+        print("Quote API error:", e)
+
+    # -------------------------
+    # TIP SYSTEM
+    # -------------------------
+    tip = "Break big tasks into small steps and stay consistent."
 
     return render_template(
         "dashboard.html",
