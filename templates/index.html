@@ -2,13 +2,20 @@
 <html>
 <head>
     <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body style="text-align:center; margin-top:100px;">
 
-<h1>Task Tracker</h1>
+<body>
 
-<a href="/login">Login</a>
-<a href="/register">Register</a>
+<div class="container">
+
+    <h1>Task Tracker</h1>
+    <p>Organize your week and track your productivity</p>
+
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+
+</div>
 
 </body>
 </html>
