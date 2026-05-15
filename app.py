@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
 import os
+import requests
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
 # -------------------------
-# DATABASE
+# DATABASE INIT
 # -------------------------
 def init_db():
     conn = sqlite3.connect("database.db")
@@ -36,7 +37,7 @@ def init_db():
 init_db()
 
 # -------------------------
-# HOME PAGE (FIXED)
+# HOME
 # -------------------------
 @app.route("/")
 def home():
@@ -54,7 +55,7 @@ def register():
         if not username or not password:
             return "Missing fields"
 
-        hashed = generate_password_hash(password)
+        hashed_pw = generate_password_hash(password)
 
         conn = sqlite3.connect("database.db")
         c = conn.cursor()
@@ -62,7 +63,7 @@ def register():
         try:
             c.execute(
                 "INSERT INTO users (username, password) VALUES (?, ?)",
-                (username, hashed)
+                (username, hashed_pw)
             )
             conn.commit()
         except:
@@ -153,7 +154,7 @@ def delete_task(task_id):
     return redirect("/dashboard")
 
 # -------------------------
-# DASHBOARD (FIXED CHART DATA)
+# DASHBOARD (API USED HERE)
 # -------------------------
 @app.route("/dashboard")
 def dashboard():
@@ -167,6 +168,9 @@ def dashboard():
     tasks = c.fetchall()
     conn.close()
 
+    # -------------------------
+    # TASK COUNT PER DAY
+    # -------------------------
     task_data = {
         "Sunday": 0,
         "Monday": 0,
@@ -181,19 +185,31 @@ def dashboard():
         if t[2] in task_data:
             task_data[t[2]] += 1
 
+    # -------------------------
+    # 🌍 REAL PUBLIC API (ZENQUOTES)
+    # -------------------------
+    try:
+        response = requests.get("https://zenquotes.io/api/random", timeout=3)
+        data = response.json()[0]
+
+        quote = f"{data['q']} — {data['a']}"
+    except:
+        quote = "Stay consistent. Success comes from daily effort."
+
+    tip = "Break big tasks into small steps."
+
     return render_template(
         "dashboard.html",
         username=session.get("username"),
         tasks=tasks,
         task_data=task_data,
-        quote="Keep going.",
-        tip="Break tasks into small steps."
+        quote=quote,
+        tip=tip
     )
 
 # -------------------------
-# RUN (RENDER SAFE)
+# RUN APP (RENDER READY)
 # -------------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
     app.run(host="0.0.0.0", port=port)
