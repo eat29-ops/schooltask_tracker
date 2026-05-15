@@ -1,0 +1,14 @@
+body {
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+}
+
+.card {
+    max-width: 500px;
+    margin: auto;
+    border-radius: 10px;
+}
+
+h1, h2 {
+    color: #333;
+}
