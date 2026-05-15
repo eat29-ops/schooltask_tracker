@@ -1,20 +1,17 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-
-    /* DEFAULT BACKGROUND (USED FOR ALL PAGES NOW) */
     background: linear-gradient(135deg, #4a90e2, #6dd5fa, #ffffff);
     min-height: 100vh;
 }
 
-/* CENTER LAYOUT */
+/* CENTER EVERYTHING */
 .container {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    padding: 20px; /* FIXES CUT-OFF ISSUE */
+    padding: 20px;
     box-sizing: border-box;
 }
 
@@ -27,51 +24,10 @@ body {
     border-radius: 16px;
     box-shadow: 0 12px 30px rgba(0,0,0,0.15);
     text-align: center;
-
-    box-sizing: border-box; /* FIXES OVERFLOW */
-}
-
-/* INPUTS */
-input, select {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    font-size: 14px;
     box-sizing: border-box;
 }
 
-/* BUTTONS */
-button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    background: #4a90e2;
-    color: white;
-    font-size: 15px;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #357bd8;
-}
-
-/* LINKS */
-a {
-    display: inline-block;
-    margin-top: 10px;
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* HOME CARD (SLIGHTLY BIGGER + CLEAN) */
+/* HOME CARD (same style, just slightly nicer spacing) */
 .home-card {
     width: 100%;
     max-width: 420px;
@@ -83,16 +39,53 @@ a:hover {
     box-sizing: border-box;
 }
 
-/* WELCOME TEXT */
-.welcome-title {
-    font-size: 34px;
+/* INPUTS */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+/* BUTTONS */
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #4a90e2;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+button:hover {
+    background: #357bd8;
+}
+
+/* LINKS */
+a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #4a90e2;
+    text-decoration: none;
     font-weight: bold;
-    color: #222;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* HOME TEXT */
+.welcome-title {
+    font-size: 32px;
+    font-weight: bold;
     margin-bottom: 10px;
 }
 
 .welcome-text {
     font-size: 15px;
     color: #444;
-    margin-bottom: 20px;
 }
