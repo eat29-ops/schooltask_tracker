@@ -200,14 +200,37 @@ def dashboard():
                 task_data[t[2]] += 1
 
         # -------------------------
-        # QUOTE API — fetch a random quote on each request
+        # QUOTE — random quote on each request
         # -------------------------
-        quote = "Stay consistent — success is built daily."
+        fallback_quotes = [
+            "Stay consistent — success is built daily.",
+            "The secret of getting ahead is getting started. — Mark Twain",
+            "It always seems impossible until it's done. — Nelson Mandela",
+            "Don't watch the clock; do what it does. Keep going. — Sam Levenson",
+            "Start where you are. Use what you have. Do what you can. — Arthur Ashe",
+            "Success is not final, failure is not fatal: it is the courage to continue that counts. — Winston Churchill",
+            "Believe you can and you're halfway there. — Theodore Roosevelt",
+            "The only way to do great work is to love what you do. — Steve Jobs",
+            "Hard work beats talent when talent doesn't work hard. — Tim Notke",
+            "You don't have to be great to start, but you have to start to be great. — Zig Ziglar",
+            "Dream big and dare to fail. — Norman Vaughan",
+            "What you do today can improve all your tomorrows. — Ralph Marston",
+            "The future belongs to those who believe in the beauty of their dreams. — Eleanor Roosevelt",
+            "Education is the most powerful weapon which you can use to change the world. — Nelson Mandela",
+            "A person who never made a mistake never tried anything new. — Albert Einstein",
+            "In the middle of every difficulty lies opportunity. — Albert Einstein",
+            "It does not matter how slowly you go as long as you do not stop. — Confucius",
+            "Act as if what you do makes a difference. It does. — William James",
+            "Quality is not an act, it is a habit. — Aristotle",
+            "Well done is better than well said. — Benjamin Franklin",
+        ]
+
+        quote = random.choice(fallback_quotes)
 
         try:
             response = requests.get(
                 "https://zenquotes.io/api/quotes",
-                timeout=5
+                timeout=3
             )
 
             if response.ok:
@@ -216,7 +239,7 @@ def dashboard():
                 quote_text = pick.get("q")
                 quote_author = pick.get("a")
 
-                if quote_text and quote_author:
+                if quote_text and quote_author and "Too many requests" not in quote_text:
                     quote = f"{quote_text} — {quote_author}"
 
         except Exception as e:
