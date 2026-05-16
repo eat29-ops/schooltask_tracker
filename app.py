@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
 import os
+import random
 import requests
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -199,53 +200,33 @@ def dashboard():
                 task_data[t[2]] += 1
 
         # -------------------------
-        # 🌍 FIXED QUOTE API (REAL RANDOM + NO CACHE ISSUES)
+        # QUOTE API — fetch a random quote on each request
         # -------------------------
-  import random
+        quote = "Stay consistent — success is built daily."
 
-quote = "Stay consistent — success is built daily."
+        try:
+            response = requests.get(
+                "https://zenquotes.io/api/quotes",
+                timeout=5
+            )
 
-try:
-    response = requests.get(
-        "https://zenquotes.io/api/random",
-        timeout=5
-    )
+            if response.ok:
+                data = response.json()
+                pick = random.choice(data)
+                quote_text = pick.get("q")
+                quote_author = pick.get("a")
 
-    if response.ok:
-        data = response.json()
+                if quote_text and quote_author:
+                    quote = f"{quote_text} — {quote_author}"
 
-        # ZenQuotes returns a list
-        quote_text = data[0].get("q")
-        quote_author = data[0].get("a")
-
-        if quote_text and quote_author:
-            quote = f"{quote_text} — {quote_author}"
-
-except Exception as e:
-    print("Quote API error:", e)
+        except Exception as e:
+            print("Quote API error:", e)
 
         # -------------------------
         # TIP
         # -------------------------
         tip = "Break big tasks into small steps and stay consistent."
 
-        # -------------------------
-        # RESPONSE
-        # -------------------------
-        return render_template(
-            "dashboard.html",
-            username=session.get("username"),
-            tasks=tasks,
-            task_data=task_data,
-            quote=quote,
-            tip=tip
-        )
-
-    except Exception as e:
-        print("Dashboard error:", e)
-        return "Dashboard error — check server logs"
-
-   
         # -------------------------
         # RENDER
         # -------------------------
