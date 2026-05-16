@@ -165,22 +165,21 @@ def delete_task(task_id):
 # -------------------------
 # DASHBOARD (FULL FIXED VERSION)
 # -------------------------
-@app.route("/dashboard")
-def dashboard():
-    if "user_id" not in session:
-        return redirect("/login")
+response = make_response(render_template(
+    "dashboard.html",
+    username=session.get("username"),
+    tasks=tasks,
+    task_data=task_data,
+    quote=quote,
+    tip=tip
+))
 
-    try:
-        conn = sqlite3.connect("database.db")
-        c = conn.cursor()
+# 🚫 force browser not to cache dashboard
+response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+response.headers["Pragma"] = "no-cache"
+response.headers["Expires"] = "0"
 
-        c.execute(
-            "SELECT id, task, day FROM tasks WHERE user_id = ?",
-            (session["user_id"],)
-        )
-        tasks = c.fetchall()
-        conn.close()
-
+return response
         # -------------------------
         # TASK DATA FOR CHART
         # -------------------------
