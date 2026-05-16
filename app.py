@@ -201,29 +201,25 @@ def dashboard():
         # -------------------------
         # 🌍 FIXED QUOTE API (REAL RANDOM + NO CACHE ISSUES)
         # -------------------------
-    import random
+  import random
 
-
+quote = "Stay consistent — success is built daily."
 
 try:
     response = requests.get(
-        "https://type.fit/api/quotes",
+        "https://zenquotes.io/api/random",
         timeout=5
     )
 
     if response.ok:
         data = response.json()
 
-        # pick a random quote from full dataset
-        random_quote = random.choice(data)
+        # ZenQuotes returns a list
+        quote_text = data[0].get("q")
+        quote_author = data[0].get("a")
 
-        text = random_quote.get("text")
-        author = random_quote.get("author")
-
-        if text and author:
-            quote = f"{text} — {author}"
-        elif text:
-            quote = text
+        if quote_text and quote_author:
+            quote = f"{quote_text} — {quote_author}"
 
 except Exception as e:
     print("Quote API error:", e)
