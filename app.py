@@ -203,7 +203,7 @@ def dashboard():
         # -------------------------
     import random
 
-quote = "Stay consistent — success is built daily."
+
 
 try:
     response = requests.get(
