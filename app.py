@@ -165,21 +165,22 @@ def delete_task(task_id):
 # -------------------------
 # DASHBOARD (FULL FIXED VERSION)
 # -------------------------
-response = make_response(render_template(
-    "dashboard.html",
-    username=session.get("username"),
-    tasks=tasks,
-    task_data=task_data,
-    quote=quote,
-    tip=tip
-))
+@app.route("/dashboard")
+def dashboard():
+    if "user_id" not in session:
+        return redirect("/login")
 
-# 🚫 force browser not to cache dashboard
-response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-response.headers["Pragma"] = "no-cache"
-response.headers["Expires"] = "0"
+    try:
+        conn = sqlite3.connect("database.db")
+        c = conn.cursor()
 
-return response
+        c.execute(
+            "SELECT id, task, day FROM tasks WHERE user_id = ?",
+            (session["user_id"],)
+        )
+        tasks = c.fetchall()
+        conn.close()
+
         # -------------------------
         # TASK DATA FOR CHART
         # -------------------------
@@ -198,19 +199,21 @@ return response
                 task_data[t[2]] += 1
 
         # -------------------------
-        # 🌍 QUOTE API (FORCED REFRESH + SAFE)
+        # 🌍 FIXED QUOTE API (REAL RANDOM + NO CACHE ISSUES)
         # -------------------------
-        import time
-
         quote = "Stay consistent — success is built daily."
 
         try:
             response = requests.get(
-                f"https://api.quotable.io/random?cache={int(time.time())}",
-                timeout=5
+                "https://api.quotable.io/random",
+                timeout=5,
+                headers={
+                    "Cache-Control": "no-cache",
+                    "Pragma": "no-cache"
+                }
             )
 
-            if response.ok:
+            if response.status_code == 200:
                 data = response.json()
 
                 content = data.get("content")
@@ -227,6 +230,23 @@ return response
         # -------------------------
         tip = "Break big tasks into small steps and stay consistent."
 
+        # -------------------------
+        # RESPONSE
+        # -------------------------
+        return render_template(
+            "dashboard.html",
+            username=session.get("username"),
+            tasks=tasks,
+            task_data=task_data,
+            quote=quote,
+            tip=tip
+        )
+
+    except Exception as e:
+        print("Dashboard error:", e)
+        return "Dashboard error — check server logs"
+
+   
         # -------------------------
         # RENDER
         # -------------------------
