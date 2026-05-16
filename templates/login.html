@@ -17,7 +17,7 @@
             background: white;
             padding: 30px;
             border-radius: 15px;
-            width: 300px;
+            width: 320px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             text-align: center;
         }
@@ -53,11 +53,20 @@
             font-weight: bold;
         }
 
-        a {
+        .links {
+            margin-top: 12px;
+        }
+
+        .links a {
             display: block;
-            margin-top: 10px;
-            color: white;
+            margin-top: 8px;
+            color: #333;
             text-decoration: none;
+            font-size: 14px;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -73,13 +82,16 @@
     {% endif %}
 
     <form method="POST">
-        <input type="text" name="username" placeholder="Username">
-        <input type="password" name="password" placeholder="Password">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
         <button type="submit">Login</button>
     </form>
 
-    <a href="/">Back to Home</a>
-    <a href="/register">Create Account</a>
+    <!-- ✅ YOUR BUTTONS (NOW SAFE) -->
+    <div class="links">
+        <a href="/">← Back to Home</a>
+        <a href="/register">Create Account</a>
+    </div>
 
 </div>
 
