@@ -201,29 +201,32 @@ def dashboard():
         # -------------------------
         # 🌍 FIXED QUOTE API (REAL RANDOM + NO CACHE ISSUES)
         # -------------------------
-        quote = "Stay consistent — success is built daily."
+    import random
 
-        try:
-            response = requests.get(
-                "https://api.quotable.io/random",
-                timeout=5,
-                headers={
-                    "Cache-Control": "no-cache",
-                    "Pragma": "no-cache"
-                }
-            )
+quote = "Stay consistent — success is built daily."
 
-            if response.status_code == 200:
-                data = response.json()
+try:
+    response = requests.get(
+        "https://type.fit/api/quotes",
+        timeout=5
+    )
 
-                content = data.get("content")
-                author = data.get("author")
+    if response.ok:
+        data = response.json()
 
-                if content and author:
-                    quote = f"{content} — {author}"
+        # pick a random quote from full dataset
+        random_quote = random.choice(data)
 
-        except Exception as e:
-            print("Quote API error:", e)
+        text = random_quote.get("text")
+        author = random_quote.get("author")
+
+        if text and author:
+            quote = f"{text} — {author}"
+        elif text:
+            quote = text
+
+except Exception as e:
+    print("Quote API error:", e)
 
         # -------------------------
         # TIP
