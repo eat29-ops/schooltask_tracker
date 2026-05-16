@@ -201,29 +201,23 @@ def dashboard():
             task_data[t[2]] += 1
 
     # 🌍 PUBLIC API (QUOTABLE)
-    quote = "Stay consistent — success is built daily."
+   # 🌍 STABLE QUOTE API (NO BREAKING)
+quote = "Stay consistent — success is built daily."
 
-    try:
-        res = requests.get("https://api.quotable.io/random", timeout=5)
+try:
+    res = requests.get("https://api.quotable.io/random", timeout=5)
 
-        if res.status_code == 200:
-            data = res.json()
-            quote = f"{data['content']} — {data['author']}"
+    if res.ok:
+        data = res.json()
 
-    except:
-        pass
+        quote_text = data.get("content")
+        quote_author = data.get("author")
 
-    tip = "Break big tasks into small steps and stay consistent."
+        if quote_text and quote_author:
+            quote = f"{quote_text} — {quote_author}"
 
-    return render_template(
-        "dashboard.html",
-        username=session.get("username"),
-        tasks=tasks,
-        task_data=task_data,
-        quote=quote,
-        tip=tip
-    )
-
+except Exception as e:
+    print("Quote API error:", e)
 # -------------------------
 # RUN APP
 # -------------------------
