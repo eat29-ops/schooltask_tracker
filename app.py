@@ -80,11 +80,7 @@ def register():
     return render_template("register.html", error=error)
 
 # -------------------------
-# LOGIN
-# -------------------------
-
-# -------------------------
-# LOGIN
+# LOGIN (FIXED)
 # -------------------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -94,7 +90,6 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        # safety check
         if not username or not password:
             error = "Please enter both username and password."
             return render_template("login.html", error=error)
@@ -106,14 +101,12 @@ def login():
         user = c.fetchone()
         conn.close()
 
-        # correct login
         if user and check_password_hash(user[1], password):
             session["user_id"] = user[0]
             session["username"] = username
             return redirect("/dashboard")
 
-        # wrong login (stays on same page)
-        error = "Invalid username or password. Please try again."
+        error = "Invalid username or password."
 
     return render_template("login.html", error=error)
 
@@ -171,7 +164,7 @@ def delete_task(task_id):
     return redirect("/dashboard")
 
 # -------------------------
-# DASHBOARD (API + TASK DATA)
+# DASHBOARD (API FIXED)
 # -------------------------
 @app.route("/dashboard")
 def dashboard():
@@ -185,7 +178,9 @@ def dashboard():
     tasks = c.fetchall()
     conn.close()
 
+    # -------------------------
     # TASK DATA FOR CHART
+    # -------------------------
     task_data = {
         "Sunday": 0,
         "Monday": 0,
@@ -200,26 +195,45 @@ def dashboard():
         if t[2] in task_data:
             task_data[t[2]] += 1
 
-    # 🌍 PUBLIC API (QUOTABLE)
-   # 🌍 STABLE QUOTE API (NO BREAKING)
-quote = "Stay consistent — success is built daily."
+    # -------------------------
+    # 🌍 STABLE QUOTE API
+    # -------------------------
+    quote = "Stay consistent — success is built daily."
 
-try:
-    res = requests.get("https://api.quotable.io/random", timeout=5)
+    try:
+        response = requests.get(
+            "https://api.quotable.io/random",
+            timeout=5,
+            headers={"Cache-Control": "no-cache"}
+        )
 
-    if res.ok:
-        data = res.json()
+        if response.status_code == 200:
+            data = response.json()
+            content = data.get("content")
+            author = data.get("author")
 
-        quote_text = data.get("content")
-        quote_author = data.get("author")
+            if content and author:
+                quote = f"{content} — {author}"
 
-        if quote_text and quote_author:
-            quote = f"{quote_text} — {quote_author}"
+    except Exception as e:
+        print("Quote API error:", e)
 
-except Exception as e:
-    print("Quote API error:", e)
+    # -------------------------
+    # TIP SYSTEM
+    # -------------------------
+    tip = "Break big tasks into small steps and stay consistent."
+
+    return render_template(
+        "dashboard.html",
+        username=session.get("username"),
+        tasks=tasks,
+        task_data=task_data,
+        quote=quote,
+        tip=tip
+    )
+
 # -------------------------
-# RUN APP
+# RUN APP (RENDER READY)
 # -------------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
