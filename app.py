@@ -82,6 +82,10 @@ def register():
 # -------------------------
 # LOGIN
 # -------------------------
+
+# -------------------------
+# LOGIN
+# -------------------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
     error = None
@@ -90,6 +94,11 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
 
+        # safety check
+        if not username or not password:
+            error = "Please enter both username and password."
+            return render_template("login.html", error=error)
+
         conn = sqlite3.connect("database.db")
         c = conn.cursor()
 
@@ -97,12 +106,14 @@ def login():
         user = c.fetchone()
         conn.close()
 
+        # correct login
         if user and check_password_hash(user[1], password):
             session["user_id"] = user[0]
             session["username"] = username
             return redirect("/dashboard")
-        else:
-            error = "Incorrect username or password. Please try again."
+
+        # wrong login (stays on same page)
+        error = "Invalid username or password. Please try again."
 
     return render_template("login.html", error=error)
 
