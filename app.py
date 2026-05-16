@@ -162,79 +162,84 @@ def delete_task(task_id):
     conn.close()
 
     return redirect("/dashboard")
-
 # -------------------------
-# DASHBOARD (API FIXED)
+# DASHBOARD (FULL FIXED VERSION)
 # -------------------------
 @app.route("/dashboard")
 def dashboard():
     if "user_id" not in session:
         return redirect("/login")
 
-    conn = sqlite3.connect("database.db")
-    c = conn.cursor()
-
-    c.execute("SELECT id, task, day FROM tasks WHERE user_id = ?", (session["user_id"],))
-    tasks = c.fetchall()
-    conn.close()
-
-    # -------------------------
-    # TASK DATA FOR CHART
-    # -------------------------
-    task_data = {
-        "Sunday": 0,
-        "Monday": 0,
-        "Tuesday": 0,
-        "Wednesday": 0,
-        "Thursday": 0,
-        "Friday": 0,
-        "Saturday": 0
-    }
-
-    for t in tasks:
-        if t[2] in task_data:
-            task_data[t[2]] += 1
-
-    # -------------------------
-    # 🌍 STABLE QUOTE API
-    # -------------------------
-    quote = "Stay consistent — success is built daily."
-
     try:
-        response = requests.get(
-            "https://api.quotable.io/random",
-            timeout=5,
-            headers={"Cache-Control": "no-cache"}
+        conn = sqlite3.connect("database.db")
+        c = conn.cursor()
+
+        c.execute(
+            "SELECT id, task, day FROM tasks WHERE user_id = ?",
+            (session["user_id"],)
+        )
+        tasks = c.fetchall()
+        conn.close()
+
+        # -------------------------
+        # TASK DATA FOR CHART
+        # -------------------------
+        task_data = {
+            "Sunday": 0,
+            "Monday": 0,
+            "Tuesday": 0,
+            "Wednesday": 0,
+            "Thursday": 0,
+            "Friday": 0,
+            "Saturday": 0
+        }
+
+        for t in tasks:
+            if len(t) >= 3 and t[2] in task_data:
+                task_data[t[2]] += 1
+
+        # -------------------------
+        # 🌍 QUOTE API (FORCED REFRESH + SAFE)
+        # -------------------------
+        import time
+
+        quote = "Stay consistent — success is built daily."
+
+        try:
+            response = requests.get(
+                f"https://api.quotable.io/random?cache={int(time.time())}",
+                timeout=5
+            )
+
+            if response.ok:
+                data = response.json()
+
+                content = data.get("content")
+                author = data.get("author")
+
+                if content and author:
+                    quote = f"{content} — {author}"
+
+        except Exception as e:
+            print("Quote API error:", e)
+
+        # -------------------------
+        # TIP
+        # -------------------------
+        tip = "Break big tasks into small steps and stay consistent."
+
+        # -------------------------
+        # RENDER
+        # -------------------------
+        return render_template(
+            "dashboard.html",
+            username=session.get("username"),
+            tasks=tasks,
+            task_data=task_data,
+            quote=quote,
+            tip=tip
         )
 
-        if response.status_code == 200:
-            data = response.json()
-            content = data.get("content")
-            author = data.get("author")
-
-            if content and author:
-                quote = f"{content} — {author}"
-
     except Exception as e:
-        print("Quote API error:", e)
-
-    # -------------------------
-    # TIP SYSTEM
-    # -------------------------
-    tip = "Break big tasks into small steps and stay consistent."
-
-    return render_template(
-        "dashboard.html",
-        username=session.get("username"),
-        tasks=tasks,
-        task_data=task_data,
-        quote=quote,
-        tip=tip
-    )
-
-# -------------------------
-# RUN APP (RENDER READY)
-# -------------------------
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+        print("Dashboard error:", e)
+        return "Dashboard error — check server logs"
